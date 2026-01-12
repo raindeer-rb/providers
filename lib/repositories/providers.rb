@@ -19,7 +19,7 @@ module Low
         providers[provider_key]
       end
 
-      # Usage: def initialize(dependency: Low::Providers[:dependency])
+      # Providers[] is harder to stub in tests and should only be used when dependency injection isn't possible.
       def [](provider_key)
         providers[provider_key].result
       end
