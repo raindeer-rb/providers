@@ -5,6 +5,8 @@ require_relative '../models/provider'
 module Low
   # Private API. Public methods exposed via LowDependency.
   class Providers
+    class MissingProviderError < StandardError; end
+
     class << self
       def provide(key:, &block)
         providers[key] = Provider.new(key:, &block)
@@ -21,7 +23,10 @@ module Low
 
       # Providers[] is harder to stub in tests and should only be used when dependency injection isn't possible.
       def [](provider_key)
-        providers[provider_key].result
+        provider = providers[provider_key]
+        raise(MissingProviderError, "Provider #{provider_key.inspect} not found") if provider.nil?
+
+        provider.result
       end
 
       def all

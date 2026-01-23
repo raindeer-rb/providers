@@ -6,8 +6,8 @@ PATH
 PATH
   remote: .
   specs:
-    low_dependency (0.2.1)
-      expressions
+    low_dependency (0.3.0)
+      expressions (~> 0.1)
 
 GEM
   remote: https://rubygems.org/

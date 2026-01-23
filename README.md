@@ -55,6 +55,10 @@ end
 LowDependency lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (populating an arg via a framework):
 
 ```ruby
+LowDependency.provide(:provider_dependency) do
+  ProviderDependency.new
+end
+
 # Define both an "provider" and a "classical" dependency:
 class MyClass
   include LowType
@@ -77,8 +81,9 @@ Now you get to have your classical dependency cake 🍰 and eat it too with an a
 
 ### Dependency Expression
 
-The `def(dependency: Dependency)` syntax is an [Expression](https://github.com/raindeer-rb/expressions); an object composed via a query builder like interface.  
-A Dependency Expression defines the name of the local variable, as well as the name of the provider that will inject the dependency into your code.
+A Dependency Expression defines the dependency to be injected, the provider that will inject it and the name of the local variable that it will be made available as.
+
+The `def(dependency: Dependency)` syntax is an [Expression](https://github.com/raindeer-rb/expressions); an object composed via a query builder like interface. It follows the same logically consistent rules as other expressions in the Expressions API.
 
 To define a provider with a different name to that of the local variable do:
 ```ruby

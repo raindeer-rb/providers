@@ -4,7 +4,7 @@ require_relative '../../lib/expressions/dependency'
 require_relative '../fixtures/mock_provider'
 
 RSpec.describe Low::Dependency do
-  describe '| plus expression' do
+  describe '| union value' do
     context 'with a symbol value' do
       let(:dependency_expression) { Low::Dependency | :symbol_provider }
 

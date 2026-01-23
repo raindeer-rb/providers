@@ -4,20 +4,32 @@ require 'expressions'
 
 module Low
   # A Dependency Expression requires LowType in order to be injected via a constructor.
-  # See "LowDependency[:dependency]" for traditional dependency injection sans LowType.
+  # See "LowDependency[:dependency]" for traditional dependency injection without LowType.
   class Dependency < Expressions::Expression
     attr_reader :provider_key, :var_name
 
-    def initialize(var_name: nil)
+    def initialize(provider_key: nil, var_name: nil)
       super()
 
-      @provider_key = var_name
+      @provider_key = provider_key || var_name
       @var_name = var_name
     end
 
+    def required?
+      false
+    end
+
+    # Inject dependency via LowType's default value.
+    def default_value
+      Providers[@provider_key]
+    end
+
+    # Ignore LowType's validation of arguments of type Dependency.
+    def validate!(value:, proxy:); end
+
     private
 
-    def receive_value(value)
+    def union_value(value)
       @provider_key = value
       @var_name = LowDependency.var_name_via_namespace(value)
     end
