@@ -6,7 +6,7 @@ PATH
 PATH
   remote: .
   specs:
-    low_dependency (0.3.1)
+    providers (0.3.1)
       expressions (~> 0.1)
 
 GEM
@@ -74,7 +74,7 @@ PLATFORMS
 
 DEPENDENCIES
   expressions!
-  low_dependency!
+  providers!
   pry
   pry-nav
   rack

@@ -3,20 +3,19 @@
 require_relative 'lib/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'low_dependency'
+  spec.name = 'providers'
   spec.version = Low::DEPENDENCY_VERSION
   spec.authors = ['maedi']
   spec.email = ['maediprichard@gmail.com']
 
   spec.summary = 'Dependency Injection in crisp and clear syntax'
   spec.description = 'Automatic Dependency Injection where you get to see and keep control of the constructor'
-  spec.homepage = 'https://github.com/low-rb/low_dependency'
+  spec.homepage = 'https://github.com/raindeer-rb/providers'
   spec.required_ruby_version = '>= 3.3.0'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/low-rb/low_dependency/src/branch/main'
+  spec.metadata['source_code_uri'] = 'https://github.com/raindeer-rb/providers/src/branch/main'
 
-  # Specify which files should be added to the gem when it is released.
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir.glob('lib/**/*')
   end

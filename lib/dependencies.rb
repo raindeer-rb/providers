@@ -4,15 +4,15 @@ require_relative 'config/config'
 require_relative 'expressions/dependency'
 require_relative 'factories/dependency_factory'
 require_relative 'repositories/dependencies'
-require_relative 'repositories/providers'
+require_relative 'providers'
 
-class LowDependency
+class Dependencies
   class << self
     def provide(key, &block)
-      Low::Providers.provide(key:, &block)
+      Low::Dependencies.provide(key:, &block)
     end
 
-    # Usage: "include LowDependency[:dependency]"
+    # Usage: "include Dependencies[:dependency]"
     def [](*dependencies)
       class_dependencies = Low::DependencyFactory.parse([*dependencies])
 
@@ -38,12 +38,12 @@ class LowDependency
                 provider = Low::Providers.find(dependency.provider_key)
                 raise StandardError, "Provider #{dependency.provider_key} not found" if provider.nil?
 
-                var_name = LowDependency.var_name_via_namespace(dependency.var_name)
+                var_name = Providers.var_name_via_namespace(dependency.var_name)
                 instance_variable_set("@#{var_name}", provider.result)
               end
             end
 
-            LowDependency.define_readers(@low_dependencies, self)
+            Providers.define_readers(@low_dependencies, self)
           end
         end
       end

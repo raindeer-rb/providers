@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/low_dependency'
+require_relative '../../lib/dependencies'
 require_relative '../fixtures/mock_provider'
 
-RSpec.describe LowDependency do
+RSpec.describe Dependencies do
   describe '.provide' do
     it 'defines a provider' do
       described_class.provide(:mock_provider) do

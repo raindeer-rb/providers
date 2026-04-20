@@ -9,7 +9,7 @@ Minor features that don't break backwards compatibility are released as patches.
 
 ### Added
 
-- Inject dependencies via [LowType](https://github.com/low-rb/low_type)
+- Inject dependencies via [LowType](https://github.com/raindeer-rb/low_type)
 
 ## 0.2.0
 
@@ -21,4 +21,4 @@ Minor features that don't break backwards compatibility are released as patches.
 
 ### Added
 
-- Support `include LowDependency[:dependency]` syntax
+- Support `include Dependencies[:dependency]` syntax

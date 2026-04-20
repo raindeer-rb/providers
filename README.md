@@ -1,6 +1,6 @@
-<a href="https://rubygems.org/gems/low_dependency" title="Install gem"><img src="https://badge.fury.io/rb/low_dependency.svg" alt="Gem version" height="18"></a> <a href="https://github.com/low-rb/low_dependency" title="GitHub"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo" height="18"></a> <a href="https://codeberg.org/Iow/dependency" title="Codeberg"><img src="https://img.shields.io/badge/Codeberg-2185D0?style=for-the-badge&logo=Codeberg&logoColor=white" alt="Codeberg repo" height="18"></a>
+<a href="https://rubygems.org/gems/providers" title="Install gem"><img src="https://badge.fury.io/rb/providers.svg" alt="Gem version" height="18"></a> <a href="https://github.com/raindeer-rb/providers" title="GitHub"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub repo" height="18"></a> <a href="https://codeberg.org/Iow/dependency" title="Codeberg"><img src="https://img.shields.io/badge/Codeberg-2185D0?style=for-the-badge&logo=Codeberg&logoColor=white" alt="Codeberg repo" height="18"></a>
 
-# LowDependency
+# Providers
 
 Automatic Dependency Injection where you get to see and keep control of the constructor.
 
@@ -18,13 +18,13 @@ class MyClass
 end
 ```
 
-ℹ️ The above example requires [LowType](https://github.com/low-rb/low_type) in order to use the `def(dependency: Dependency)` syntax.
+ℹ️ The above example requires [LowType](https://github.com/raindeer-rb/low_type) in order to use the `def(dependency: Dependency)` syntax.
 
 Or you may like to use the more traditional `include` syntax:
 
 ```ruby
 class MyClass
-  include LowDependency[:my_dependency]
+  include Dependencies[:my_dependency]
 
   def my_method
     @my_dependency # => "@my_dependency" is injected.
@@ -38,24 +38,24 @@ This method hides and creates the constructor on your behalf.
 
 Provide the dependency with:
 ```ruby
-LowDependency.provide(:my_dependency) do
+Dependencies.provide(:my_dependency) do
   MyDependency.new
 end
 ```
 
 Namespaced string keys are fine too:
 ```ruby
-LowDependency.provide('billing.payment_provider') do
+Dependencies.provide('billing.payment_provider') do
   PaymentProvider.new
 end
 ```
 
 ## Mixing dependency types
 
-LowDependency lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (populating an arg via a framework):
+Providers lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (populating an arg via a framework):
 
 ```ruby
-LowDependency.provide(:provider_dependency) do
+Dependencies.provide(:provider_dependency) do
   ProviderDependency.new
 end
 
@@ -73,7 +73,7 @@ end
 MyClass.new(classical_dependency: ClassicalDependency.new)
 ```
 
-The `provider_dependency` argument will automatically be injected by LowDependency!
+The `provider_dependency` argument will automatically be injected by Providers!
 
 Now you get to have your classical dependency cake 🍰 and eat it too with an automatically injected dependency spoon 🥣
 
@@ -108,14 +108,14 @@ The `include` style syntax supports the same functionallity as the dependency ex
 Multiple dependencies:
 ```ruby
 class MyClass
-  include LowDependency[:dependency_one, :dependency_two]
+  include Dependencies[:dependency_one, :dependency_two]
 end
 ```
 
 Dependencies with differing local variable/provider keys:
 ```ruby
 class MyClass
-  include LowDependency[dependency_one: :provider_one, dependency_two: 'billing.provider_two']
+  include Dependencies[dependency_one: :provider_one, dependency_two: 'billing.provider_two']
   # Instance variables @dependency_one and @dependency_two are now available.
 end
 ```
@@ -125,7 +125,7 @@ end
 Separating many dependencies on multiple lines:
 ```ruby
 class MyClass
-  include LowDependency[
+  include Dependencies[
     dependency_one: :provider_one,
     dependency_two: 'billing.provider_two',
     :dependency_three,
@@ -136,7 +136,7 @@ end
 
 ## Installation
 
-Add `gem 'low_dependency'` to your Gemfile then:
+Add `gem 'providers'` to your Gemfile then:
 ```
 bundle install
 ```

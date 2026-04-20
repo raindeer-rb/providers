@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../../lib/low_dependency'
+require_relative '../../lib/dependencies'
 require_relative '../fixtures/mock_dependencies'
 require_relative '../fixtures/mock_provider'
 
-RSpec.describe 'include LowDependency[:dependency]' do
+RSpec.describe 'include Dependencies[:dependency]' do
   after do
     Low::Providers.clear
   end
@@ -12,7 +12,7 @@ RSpec.describe 'include LowDependency[:dependency]' do
   context 'with a single dependency' do
     let(:subject) { IncludeDependency.new }
 
-    before { LowDependency.provide(:provider_one) { MockProvider.new } }
+    before { Dependencies.provide(:provider_one) { MockProvider.new } }
 
     it 'injects dependency' do
       expect(subject.provider_one).to be_instance_of(MockProvider)
@@ -21,7 +21,7 @@ RSpec.describe 'include LowDependency[:dependency]' do
     context 'with a string key dependency' do
       let(:subject) { IncludeStringDependency.new }
 
-      before { LowDependency.provide('provider_one') { MockProvider.new } }
+      before { Dependencies.provide('provider_one') { MockProvider.new } }
 
       it 'injects dependency' do
         expect(subject.provider_one).to be_instance_of(MockProvider)
@@ -31,7 +31,7 @@ RSpec.describe 'include LowDependency[:dependency]' do
     context 'with a namespaced string key dependency' do
       let(:subject) { IncludeNamespacedStringDependency.new }
 
-      before { LowDependency.provide('namespace.provider_one') { MockProvider.new } }
+      before { Dependencies.provide('namespace.provider_one') { MockProvider.new } }
 
       it 'injects dependency without namespace' do
         expect(subject.provider_one).to be_instance_of(MockProvider)
@@ -43,8 +43,8 @@ RSpec.describe 'include LowDependency[:dependency]' do
     let(:subject) { IncludeDependencies.new }
 
     before do
-      LowDependency.provide(:provider_one) { MockProvider.new }
-      LowDependency.provide(:provider_two) { MockProvider.new }
+      Dependencies.provide(:provider_one) { MockProvider.new }
+      Dependencies.provide(:provider_two) { MockProvider.new }
     end
 
     it 'injects multiple dependencies' do
@@ -56,8 +56,8 @@ RSpec.describe 'include LowDependency[:dependency]' do
       let(:subject) { IncludeStringDependencies.new }
 
       before do
-        LowDependency.provide('provider_one') { MockProvider.new }
-        LowDependency.provide('provider_two') { MockProvider.new }
+        Dependencies.provide('provider_one') { MockProvider.new }
+        Dependencies.provide('provider_two') { MockProvider.new }
       end
 
       it 'injects dependencies' do
@@ -70,8 +70,8 @@ RSpec.describe 'include LowDependency[:dependency]' do
       let(:subject) { IncludeNamespacedStringDependencies.new }
 
       before do
-        LowDependency.provide('namespace.provider_one') { MockProvider.new }
-        LowDependency.provide('namespace.provider_two') { MockProvider.new }
+        Dependencies.provide('namespace.provider_one') { MockProvider.new }
+        Dependencies.provide('namespace.provider_two') { MockProvider.new }
       end
 
       it 'injects dependencies without namespace' do
