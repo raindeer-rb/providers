@@ -4,7 +4,7 @@ require_relative 'lib/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'providers'
-  spec.version = Low::DEPENDENCY_VERSION
+  spec.version = Providers::VERSION
   spec.authors = ['maedi']
   spec.email = ['maediprichard@gmail.com']
 

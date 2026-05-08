@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Low
-  class Dependencies
+module Dependencies
+  class Repository
     class << self
       def stack
         @stack ||= []

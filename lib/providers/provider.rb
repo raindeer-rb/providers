@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Low
+module Providers
   class Provider
     attr_reader :key
 

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require_relative '../expressions/dependency'
+require_relative '../dependencies/dependency'
 
-module Low
-  class DependencyFactory
+module Dependencies
+  class Factory
     class << self
       def parse(dependencies)
         class_dependencies = []
