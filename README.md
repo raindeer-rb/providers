@@ -66,7 +66,7 @@ end
 
 ## Mixing dependency types
 
-Providers lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (populating an arg via a framework):
+Providers lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (via a framework):
 
 ```ruby
 Providers.define(:provider_dependency) do
@@ -83,11 +83,11 @@ class MyClass
   end
 end
 
-# Then bring it all together with:
+# Then call without "provider_dependency":
 MyClass.new(classical_dependency: ClassicalDependency.new)
 ```
 
-The `provider_dependency` argument will automatically be injected from the `provider_dependency` provider by Providers!
+The omitted `provider_dependency` argument will automatically be injected from the `provider_dependency` provider by Providers!
 
 Now you get to have your classical dependency cake 🍰 and eat it too with an automatically injected dependency spoon 🥣
 
@@ -136,15 +136,15 @@ class MyClass
 end
 ```
 
-Dependencies with differing dependency and provider keys:
+Dependency with differing dependency and provider key:
 ```ruby
 class MyClass
-  include Dependencies[dependency_one: :provider_one, dependency_two: 'billing.provider_two']
-  # Instance variables @dependency_one and @dependency_two are now available on instantiation.
+  include Dependencies[dependency_one: :provider_one]
+  # Instance variable @dependency_one is now available on instantiation.
 end
 ```
 
-Namespaced dependencies:
+Namespaced dependency:
 ```ruby
 class MyClass
   include Dependencies['billing.provider_two']
