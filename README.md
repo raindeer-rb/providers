@@ -6,7 +6,7 @@ Automatic Dependency Injection where you get to see and keep control of the cons
 
 ## Injectors
 
-Providers provides 3 ways to inject a dependency.
+There are 3 ways to inject a dependency.
 
 ### 1. Dependency Expression
 
