@@ -66,6 +66,15 @@ Providers.define('billing.payment_provider') do
 end
 ```
 
+### Eager Loading
+
+Eager load a provider by adding an `eager: true` keyword argument:
+```ruby
+Providers.define(:logger, eager: true) do
+  Logger.new # Initialised immediately, not when the dependency is requested later.
+end
+```
+
 ## Mixing dependency types
 
 Providers lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (via a framework):

@@ -6,8 +6,10 @@ module Providers
   class MissingProviderError < StandardError; end
 
   class << self
-    def define(key, &block)
-      providers[key] = Provider.new(key:, &block)
+    def define(key, eager: false, receiver: self, &block)
+      provider = Provider.new(key:, &block)
+      provider.result if eager
+      providers[key] = provider
     end
 
     def providers
