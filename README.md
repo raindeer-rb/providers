@@ -24,7 +24,7 @@ class MyClass
 end
 ```
 
-ℹ️ This method requires [LowType](https://github.com/low-rb/lowtype) in order to use the `def(dependency: Dependency)` syntax.
+ℹ️ Requires [LowType](https://github.com/low-rb/lowtype) in order to use the `def(dependency: Dependency)` syntax.
 
 ### 2. Constructor Include
 
@@ -48,7 +48,7 @@ This method hides and creates the constructor on your behalf.
 logger = Providers[:my_provider]
 ```
 
-ℹ️ Use this method only when necessary, it's the least "in the spirit" of dependency injection and takes more lines of code to stub in a test.
+See [API: Providers Hash](#providers-hash)
 
 ## Providers
 
@@ -71,36 +71,36 @@ end
 Eager load a provider by adding an `eager: true` keyword argument:
 ```ruby
 Providers.define(:logger, eager: true) do
-  Logger.new # Initialised immediately, not when the dependency is requested later.
+  Logger.new # Initialised immediately, not when the dependency is requested.
 end
 ```
 
 ## Mixing dependency types
 
-Providers lets you do something special; mix "classical" dependency injection (passing an arg to `new`) with "provider" style dependency injection (via a framework):
+Providers lets you do something special; mix "manual" dependency injection (passing an arg to `new`) with "automatic" style dependency injection (via a framework):
 
 ```ruby
-Providers.define(:provider_dependency) do
-  ProviderDependency.new
+Providers.define(:automatic) do
+  AutomaticDependency.new
 end
 
-# Define both a "provider" and a "classical" dependency:
+# Define both a "manual" and "automatic" dependency:
 class MyClass
   include LowType
 
-  def initialize(provider_dependency: Dependency, classical_dependency:)
-    @provider_dependency = provider_dependency
-    @classical_dependency = classical_dependency
+  def initialize(manual:, automatic: Dependency)
+    @manual = manual
+    @automatic = automatic
   end
 end
 
-# Then call without "provider_dependency":
-MyClass.new(classical_dependency: ClassicalDependency.new)
+# Then initialize without the "automatic" arg:
+MyClass.new(manual: ManualDependency.new)
 ```
 
-The omitted `provider_dependency` argument will automatically be injected from the `provider_dependency` provider by Providers!
+The omitted `automatic` argument will automatically be injected from the `automatic` provider by Providers!
 
-Now you get to have your classical dependency cake 🍰 and eat it too with an automatically injected dependency spoon 🥣
+Now you get to have your manual dependency cake 🍰 and eat it too with an automatically injected dependency spoon 🥣
 
 ## API
 
@@ -187,6 +187,41 @@ Multiple dependencies:
 dependency_one, dependency_two = Providers[:provider_one, 'provider_two']
 ```
 
+> [!note]
+> **Bonus API:** You can use `Providers[]` in method params like `(config: Providers[:config])`, similar to a [Dependency Expression](#dependency-expression).
+
+## Testing
+
+Dependency Expressions and Constructor Include dependencies can easily be stubbed in a test just by passing them as arguments into a method.
+
+### Providers Hash
+
+When called inside a method body the `Providers[]` hash lookup takes more lines of code to stub in a test and is least "in the spirit" of dependency injection due to its hard-coded nature. However testing is still possible with the following techniques:
+
+#### RSpec - `Providers[]` stub
+
+```ruby
+before do
+  allow(Providers).to receive(:[]).and_call_original
+  allow(Providers).to receive(:[]).with(:config).and_return(config)
+end
+```
+
+#### RSpec - `Providers.define` with stubbed providers
+
+```ruby
+around do |example|
+  original = Providers.all.dup
+  example.run
+ensure
+  Providers.instance_variable_set(:@providers, original)
+end
+
+before do
+  Providers.define(:config) { config }
+end
+```
+
 ## Examples
 
 ### Boot file
@@ -210,6 +245,57 @@ Providers.define('low.loop') do
   LowLoop.new(router: Providers['rain.router'], renderer: Providers['rain.matrix'])
 end
 ```
+
+## Performance
+
+Providers appears to be over 2x faster than Dry, but load time doesn't really matter at boot time when only a relatively small amount of dependencies are created once. Providers shines at runtime when creating many instances from dependencies again and again, however this increase in performance comes with the caveat that those dependencies should be considered immutable (to be thread-safe).
+
+|                             | **Plain Ruby**     | **Dry container/auto_inject** | **Providers (lowtype)** |
+|-----------------------------|--------------------|-------------------------------|-------------------------|
+| **Dependency registration** |                    | ~2,229 ns                     | ~650 ns                 |
+| **Manual DI**               | 3.76M i/s (266 ns) |                               |                         |
+| **Automatic DI**            |                    | 628k i/s (1.59 µs)            | 1.74M i/s (575 ns)      |
+| **Manual + Automatic DI**   |                    | 558k i/s (1.79 µs)            | 1.29M i/s (775 ns)      |
+
+<details>
+  <summary>Table Key</summary>
+
+  - **DI:** Dependency Injection
+  - **i/s:** Iterations per second
+  - **µs:** Microseconds (1000 ns)
+  - **ns:** Nanoseconds
+</details>
+<br />
+
+`Providers.define` is roughly 3x faster per registration than `Dry::Container#register` (with `memoize: true`). However Providers has no `prepare`/`start`/`stop` lifecycle, Mutex locking or duplicate key checking. Provider definitions simply call other providers inside the `Provider.define` block via the `Providers[]` syntax. Also, this is a one-time cost during boot that is not that important.
+ 
+For automatic dependencies via `include Dependencies[]` Providers replaces the `initialize` method, whereas `include Import[]` inserts a module into the ancestor chain with its own `initialize` method.
+
+For automatic and manual dependencies (mixed) Providers `prepend`s an `initialize` method that calls `Providers[]` then `super`. This appears to be more efficient than a `.new` override, `**kwargs` slicing and the two chained `initialize` calls of AutoInject:
+```ruby
+class MyClass
+  include Import['automatic']
+
+  def initialize(manual:, **deps)
+    @manual = manual
+    super(**deps)
+  end
+end
+```
+
+**VS:**
+```ruby
+class MyClass
+  include LowType
+
+  def initialize(manual:, automatic: Dependency)
+    @manual = manual
+    @automatic = automatic
+  end
+end
+```
+
+Providers will take longer to load on class load/boot with mixed dependency injection as it has to parse the file via LowType, however this is a one-time performance cost.
 
 ## Installation
 
