@@ -2,8 +2,9 @@
 
 require 'expressions'
 
-module Dependencies
-  # A Dependency Expression requires LowType in order to be injected via a constructor.
+# Used within LowType's namespace.
+module Low
+  # Placed as a default value in a constructor param.
   class Dependency < ::Expressions::Expression
     attr_reader :provider_key, :var_name
 
@@ -23,7 +24,7 @@ module Dependencies
       Providers[@provider_key]
     end
 
-    # Ignore LowType's validation on arguments of type Dependency.
+    # Ignore LowType's validation on arguments of this type.
     def validate!(value:, proxy:); end
 
     private

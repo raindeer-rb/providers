@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
+require_relative 'low/dependency'
 require_relative 'providers/provider'
+require_relative 'dependencies'
 
 module Providers
   class MissingProviderError < StandardError; end

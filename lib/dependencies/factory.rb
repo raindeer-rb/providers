@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../dependencies/dependency'
+require_relative '../low/dependency'
 
 module Dependencies
   class Factory
@@ -17,7 +17,7 @@ module Dependencies
             provider_key = dependency
           end
 
-          class_dependencies << (Dependency.new(var_name: dependency) | provider_key)
+          class_dependencies << (::Low::Dependency.new(var_name: dependency) | provider_key)
         end
 
         class_dependencies

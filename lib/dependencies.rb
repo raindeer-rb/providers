@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative 'config/config'
-require_relative 'dependencies/dependency'
 require_relative 'dependencies/factory'
 require_relative 'dependencies/repository'
 require_relative 'providers'
@@ -46,12 +45,8 @@ module Dependencies
     end
 
     def define_readers(dependencies, klass)
-      dependencies.each do |dependency|
-        var_name = name_from_namespace(dependency.var_name)
-
-        klass.define_method(var_name) do
-          instance_variable_get("@#{var_name}")
-        end
+      klass.class_eval do
+        attr_reader(*dependencies.map { |d| Dependencies.name_from_namespace(d.var_name).to_sym })
       end
     end
 
