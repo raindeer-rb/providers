@@ -7,6 +7,7 @@ gemspec
 
 group :development do
   gem 'expressions', path: '../expressions'
+  gem 'low_type', path: '../low_type'
 
   gem 'irb'
   gem 'rack'
