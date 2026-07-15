@@ -6,6 +6,9 @@
 
 Automatic Dependency Injection where you get to see and keep control of the constructor.
 
+> [!note]
+> Providers is for global dependency management. For local dependency management see [Plugs](https://github.com/raindeer-rb/plugs)
+
 ## Injectors
 
 There are 3 ways to inject a dependency.
